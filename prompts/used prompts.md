@@ -3320,3 +3320,242 @@ Add comments explaining infrastructure decisions.
 
 
 ------------------------------------------------------
+
+
+You are a senior software engineer writing documentation for the pet-image-processor project.
+
+Create a professional README.md for the root of the repository.
+
+The README must explain the architecture, setup, and design decisions of the system.
+
+---
+
+PROJECT OVERVIEW
+
+This project implements an asynchronous pet image processing system.
+
+Users upload an image through a Next.js frontend.
+
+The backend stores the image in S3 and sends a message to SQS.
+
+A worker processes the image and uploads a grayscale version.
+
+The frontend polls the API until the processed image is available.
+
+---
+
+ARCHITECTURE
+
+Describe the architecture clearly.
+
+Include a simple diagram showing:
+
+Frontend
+Backend API
+S3
+SQS
+Worker
+
+---
+
+TECH STACK
+
+Frontend:
+Next.js
+React
+TypeScript
+Tailwind
+
+Backend:
+Node.js
+Express
+TypeScript
+
+Worker:
+Node.js
+Sharp
+
+Infrastructure:
+AWS S3
+AWS SQS
+Terraform
+
+---
+
+PROJECT STRUCTURE
+
+Explain the folder structure:
+
+frontend
+backend
+worker
+infra
+docs
+
+---
+
+LOCAL DEVELOPMENT
+
+Explain how to run the project locally.
+
+Include steps for:
+
+install dependencies
+configure environment variables
+run backend
+run worker
+run frontend
+
+---
+
+ENVIRONMENT VARIABLES
+
+Document all required environment variables.
+
+---
+
+API ENDPOINTS
+
+Document:
+
+POST /upload
+GET /status/:jobId
+GET /result/:jobId
+
+---
+
+TESTING
+
+Explain how to run tests.
+
+---
+
+INFRASTRUCTURE
+
+Explain the Terraform configuration.
+
+---
+
+DESIGN DECISIONS
+
+Explain:
+
+why asynchronous processing was chosen
+why SQS was used
+why S3 is used for storage
+why polling is used instead of websockets
+
+---
+
+TRADEOFFS
+
+Discuss limitations of the implementation.
+
+---
+
+FUTURE IMPROVEMENTS
+
+Examples:
+
+WebSockets for realtime updates
+Cloud deployment
+Image transformations
+Authentication
+Rate limiting
+
+
+------------------------------------------------------
+
+
+You are documenting how AI tools were used during the development of the pet-image-processor project.
+
+Create a file in the root of the repository:
+
+AI_USAGE.md
+
+The goal is to transparently explain how AI assisted the development process.
+
+---
+
+OVERVIEW
+
+Explain that AI tools were used to accelerate development while maintaining full human oversight.
+
+Mention tools such as:
+
+Cursor
+ChatGPT
+
+Explain that AI was used for:
+
+architecture guidance
+boilerplate generation
+documentation drafting
+testing suggestions
+
+---
+
+AREAS WHERE AI WAS USED
+
+Explain the main areas where AI assisted:
+
+Project architecture planning
+
+Generating initial boilerplate for:
+
+Express backend
+Next.js frontend
+Worker structure
+
+Generating Terraform infrastructure templates
+
+Drafting documentation (README)
+
+Suggesting testing structure
+
+---
+
+HUMAN REVIEW
+
+Explain that all AI-generated code was reviewed and adjusted manually.
+
+Mention that the developer:
+
+validated architecture decisions
+ensured correctness of API contracts
+verified AWS integrations
+tested the full asynchronous pipeline
+
+---
+
+VALIDATION PROCESS
+
+Explain how correctness was verified:
+
+manual testing of API endpoints
+end-to-end image processing flow
+Terraform validation
+frontend integration testing
+
+---
+
+LIMITATIONS
+
+Explain that AI-generated code required manual refinement.
+
+Mention examples:
+
+adjusting AWS configuration
+debugging S3 permissions
+fixing URL encoding issues
+improving error handling
+
+---
+
+CONCLUSION
+
+Summarize that AI served as an assistant to accelerate development, but the final system design, integration, and debugging were performed manually.
+
+The document should be concise, transparent, and professional.
+
+------------------------------------------------------
