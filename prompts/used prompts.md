@@ -2988,6 +2988,335 @@ Do not modify the upload endpoint.
 
 Only implement the job lifecycle endpoints.
 
+------------------------------------------------------
+
+You are a senior backend engineer adding tests to the Node.js backend of the pet-image-processor project.
+
+The backend uses:
+
+Node.js
+Express
+TypeScript
+
+Your task is to implement a test suite using:
+
+Jest
+Supertest
+
+Do NOT modify production code unless strictly necessary.
+
+---
+
+TEST STRUCTURE
+
+Create a new folder:
+
+backend/tests
+
+Inside it create:
+
+upload.test.ts
+status.test.ts
+job.service.test.ts
+integration.upload.test.ts
+
+---
+
+JEST CONFIGURATION
+
+Add:
+
+jest.config.js
+
+Configured for TypeScript using ts-jest.
+
+Ensure tests run with:
+
+npm test
+
+---
+
+TEST: job.service.test.ts
+
+Unit tests for job service.
+
+Test:
+
+createJob
+getJob
+updateJobStatus
+setProcessedImage
+
+Verify:
+
+job lifecycle transitions
+job not found behavior
+
+---
+
+TEST: upload.test.ts
+
+Test the upload endpoint using Supertest.
+
+Mock:
+
+S3 upload
+SQS publish
+
+Verify:
+
+POST /upload returns:
+
+{
+jobId
+status: "queued"
+}
+
+Verify validation:
+
+missing file
+invalid file
+
+---
+
+TEST: status.test.ts
+
+Test:
+
+GET /status/:jobId
+
+Verify:
+
+queued
+processing
+completed
+job not found
+
+---
+
+TEST: integration.upload.test.ts
+
+Integration-style test.
+
+Flow:
+
+POST /upload
+GET /status/:jobId
+
+Verify:
+
+job exists
+status returned
+
+Mock external services.
+
+---
+
+MOCKING
+
+Mock AWS services:
+
+S3
+SQS
+
+using Jest mocks.
+
+---
+
+SCRIPTS
+
+Add to package.json:
+
+"test": "jest"
+
+---
+
+CODE QUALITY
+
+Tests must:
+
+be readable
+be deterministic
+avoid real AWS calls
+
+
+------------------------------------------------------
+
+You are a senior DevOps engineer implementing infrastructure for the pet-image-processor project.
+
+The infrastructure must be defined using Terraform.
+
+Create a new folder:
+
+infra/
+
+The Terraform code must provision the infrastructure required by the application.
+
+Do NOT deploy anything automatically.
+
+The goal is to demonstrate infrastructure design.
+
+---
+
+INFRASTRUCTURE OVERVIEW
+
+The system architecture includes:
+
+Frontend (Next.js)
+Backend API (Node.js)
+Worker processor
+AWS S3 for image storage
+AWS SQS for asynchronous processing
+
+---
+
+FILES TO CREATE
+
+infra/provider.tf
+infra/main.tf
+infra/variables.tf
+infra/outputs.tf
+infra/s3.tf
+infra/sqs.tf
+infra/iam.tf
+infra/lambda.tf
+infra/terraform.tfvars.example
+
+---
+
+AWS PROVIDER
+
+Configure Terraform AWS provider.
+
+Variables:
+
+aws_region
+
+Example region:
+
+us-east-1
+
+---
+
+S3 BUCKET
+
+Create S3 bucket:
+
+pet-image-processor
+
+Bucket requirements:
+
+versioning enabled
+
+folders:
+
+original-images/
+processed-images/
+
+Public read access must be allowed for processed images.
+
+---
+
+SQS QUEUE
+
+Create queue:
+
+image-processing-queue
+
+Settings:
+
+visibility_timeout_seconds = 60
+message_retention_seconds = 86400
+
+---
+
+IAM ROLE
+
+Create role for worker.
+
+Permissions required:
+
+S3 GetObject
+S3 PutObject
+SQS ReceiveMessage
+SQS DeleteMessage
+SQS SendMessage
+CloudWatch Logs
+
+---
+
+LAMBDA WORKER
+
+Define Lambda function resource.
+
+Runtime:
+
+nodejs18.x
+
+Handler:
+
+worker.handler
+
+Source:
+
+worker folder zipped
+
+Environment variables:
+
+S3_BUCKET_NAME
+SQS_QUEUE_URL
+S3_ORIGINAL_PREFIX
+S3_PROCESSED_PREFIX
+
+Timeout:
+
+30 seconds
+
+Memory:
+
+512MB
+
+---
+
+VARIABLES
+
+Define variables:
+
+aws_region
+s3_bucket_name
+queue_name
+
+Provide defaults.
+
+---
+
+OUTPUTS
+
+Outputs must include:
+
+s3_bucket_name
+sqs_queue_url
+lambda_function_name
+
+---
+
+TERRAFORM VARIABLES EXAMPLE
+
+Provide example values in:
+
+terraform.tfvars.example
+
+---
+
+CODE QUALITY
+
+Terraform must be:
+
+modular
+readable
+commented
+
+Add comments explaining infrastructure decisions.
 
 
 ------------------------------------------------------
