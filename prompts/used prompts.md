@@ -2362,3 +2362,632 @@ Make sure the server can start successfully.
 
 
 ------------------------------------------------------
+
+You are a senior Node.js backend engineer implementing the upload pipeline for an asynchronous image processing system.
+
+Follow the architecture defined in:
+
+docs/system_architecture.spec.md
+docs/backend_processing_pipeline.spec.md
+docs/implementation_plan.md
+
+Specifically implement **Phase 4 – Upload Endpoint Implementation**.
+
+The backend foundation has already been created.
+
+Your task is to implement the image upload flow and job creation logic.
+
+---
+
+FEATURE TO IMPLEMENT
+
+POST /upload
+
+This endpoint must:
+
+1. Accept an image upload
+2. Validate the image
+3. Generate a jobId
+4. Upload the image to S3
+5. Create a job record
+6. Publish a queue message
+7. Return the jobId
+
+Processing must remain asynchronous.
+
+---
+
+UPLOAD HANDLING
+
+Use **multer** middleware.
+
+Requirements:
+
+• accept multipart/form-data
+• field name: "image"
+• enforce file size limit using MAX_FILE_SIZE_MB
+• restrict allowed mime types to common image formats
+
+Allowed formats:
+
+image/jpeg
+image/png
+image/webp
+
+If validation fails return appropriate HTTP errors.
+
+---
+
+STORAGE SERVICE
+
+Implement the storage abstraction in:
+
+services/storage.service.ts
+
+Use AWS SDK v3.
+
+Responsibilities:
+
+uploadOriginalImage(jobId, fileBuffer)
+
+Upload to S3 using:
+
+bucket = S3_BUCKET_NAME
+
+key format:
+
+original-images/{jobId}.jpg
+
+Prefix must come from:
+
+S3_ORIGINAL_PREFIX
+
+Return the S3 key.
+
+---
+
+QUEUE SERVICE
+
+Implement the queue publishing service in:
+
+services/queue.service.ts
+
+Use AWS SDK v3 SQS client.
+
+Function:
+
+publishImageProcessingJob(jobId, imageKey)
+
+Message structure:
+
+{
+jobId: string,
+imageKey: string
+}
+
+Send the message to:
+
+SQS_QUEUE_URL
+
+---
+
+JOB SERVICE
+
+Implement job lifecycle logic in:
+
+services/job.service.ts
+
+Since this is a take-home assignment, implement an **in-memory job store**.
+
+Use a simple Map.
+
+Key:
+
+jobId
+
+Value:
+
+Job object.
+
+Initial status must be:
+
+queued
+
+Define helper functions:
+
+createJob
+getJob
+updateJobStatus
+setProcessedImage
+
+---
+
+CONTROLLER IMPLEMENTATION
+
+Implement upload logic in:
+
+controllers/upload.controller.ts
+
+Flow:
+
+validate file
+generate UUID jobId
+upload image using storage service
+create job record
+publish queue message
+return response
+
+Response:
+
+{
+jobId: string,
+status: "queued"
+}
+
+---
+
+ROUTE REGISTRATION
+
+Ensure the route exists in:
+
+routes/upload.routes.ts
+
+POST /upload
+
+Attach multer middleware.
+
+---
+
+ERROR HANDLING
+
+Handle the following errors:
+
+missing file
+invalid mime type
+file too large
+S3 upload failure
+queue publish failure
+
+Return structured JSON error responses.
+
+---
+
+LOGGING
+
+Use the logger utility to log:
+
+upload request received
+job created
+image uploaded
+queue message published
+errors
+
+---
+
+TESTABILITY
+
+Structure the services so they can be mocked later.
+
+Controllers must remain thin.
+
+Business logic must live in services.
+
+---
+
+CODE QUALITY
+
+Ensure:
+
+• clean TypeScript types
+• modular services
+• clear error handling
+• readable logic
+• minimal duplication
+
+---
+
+OUTPUT REQUIREMENTS
+
+Generate the necessary implementations for:
+
+multer upload middleware
+storage service
+queue service
+job service
+upload controller
+upload route
+
+Ensure the server still starts successfully after this implementation.
+
+------------------------------------------------------
+
+You are a senior backend engineer implementing the asynchronous worker for the image processing system.
+
+Follow the architecture defined in:
+
+docs/system_architecture.spec.md
+docs/backend_processing_pipeline.spec.md
+docs/implementation_plan.md
+
+Specifically implement **Phase 5 – Worker Processing Pipeline**.
+
+The backend API already publishes messages to SQS when an image is uploaded.
+
+Now implement the worker that processes those messages.
+
+---
+
+WORKER PROJECT
+
+The worker lives in:
+
+worker/
+
+Create this structure:
+
+worker/
+src/
+
+worker.ts
+services/
+
+s3.service.ts
+image.service.ts
+queue.service.ts
+job.service.ts
+
+config/
+env.ts
+
+utils/
+logger.ts
+
+---
+
+WORKER RESPONSIBILITY
+
+The worker must:
+
+1. Poll SQS
+2. Receive job message
+3. Download original image from S3
+4. Process image using Sharp
+5. Upload processed image to S3
+6. Update job status
+
+---
+
+QUEUE CONSUMPTION
+
+Use AWS SDK v3 SQS client.
+
+Implement polling loop:
+
+poll every WORKER_POLL_INTERVAL_MS
+
+Steps:
+
+receive message
+parse jobId + imageKey
+process job
+delete message from queue
+
+---
+
+S3 DOWNLOAD
+
+Download original image from:
+
+bucket = S3_BUCKET_NAME
+
+key format:
+
+${S3_ORIGINAL_PREFIX}/{jobId}.jpg
+
+Return image buffer.
+
+---
+
+IMAGE PROCESSING
+
+Use sharp.
+
+Simulate processing:
+
+convert to grayscale
+resize to width 512
+
+Example conceptual pipeline:
+
+sharp(imageBuffer)
+.resize(512)
+.grayscale()
+.toBuffer()
+
+---
+
+UPLOAD PROCESSED IMAGE
+
+Upload processed image to S3:
+
+bucket = S3_BUCKET_NAME
+
+key:
+
+${S3_PROCESSED_PREFIX}/{jobId}.jpg
+
+Return key.
+
+---
+
+JOB STATUS UPDATE
+
+Use the job service shared logic.
+
+Transitions:
+
+queued → processing
+processing → completed
+
+If error:
+
+status = failed
+
+Also store processedImageKey.
+
+---
+
+MESSAGE STRUCTURE
+
+Expect queue message:
+
+{
+jobId: string,
+imageKey: string
+}
+
+---
+
+WORKER LOOP
+
+Implement a safe worker loop.
+
+Pseudo flow:
+
+while(true)
+
+poll SQS
+
+if message exists
+
+process job
+
+delete message
+
+sleep WORKER_POLL_INTERVAL_MS
+
+---
+
+LOGGING
+
+Log:
+
+worker started
+message received
+image downloaded
+image processed
+image uploaded
+job completed
+errors
+
+---
+
+ERROR HANDLING
+
+If processing fails:
+
+log error
+update job status to "failed"
+do NOT delete message immediately (optional retry behavior)
+
+---
+
+RUNNING THE WORKER
+
+Worker should start with:
+
+npm run dev
+
+and continuously poll the queue.
+
+---
+
+CODE QUALITY
+
+Ensure:
+
+clean TypeScript types
+separation of services
+readable worker loop
+structured logging
+minimal duplication
+
+---
+
+IMPORTANT
+
+Do not change backend architecture.
+Do not implement frontend yet.
+Focus only on the worker processing pipeline.
+
+
+------------------------------------------------------
+
+You are a senior Node.js backend engineer continuing the implementation of the asynchronous image processing system.
+
+Follow the architecture defined in:
+
+docs/system_architecture.spec.md
+docs/backend_processing_pipeline.spec.md
+docs/implementation_plan.md
+
+Implement **Phase 6 – Job Status and Result Endpoints**.
+
+The upload endpoint already exists and creates jobs in memory.
+The worker processes jobs and needs to update job status via the API.
+
+---
+
+ENDPOINTS TO IMPLEMENT
+
+1️⃣ GET /status/:jobId
+
+Return the job processing status.
+
+Example response:
+
+{
+jobId: string,
+status: "queued" | "processing" | "completed" | "failed"
+}
+
+If job does not exist:
+
+return 404.
+
+---
+
+2️⃣ GET /result/:jobId
+
+Return the processed image URL.
+
+Example response:
+
+{
+jobId: string,
+status: "completed",
+processedImageUrl: string
+}
+
+If job not completed yet:
+
+return status but no image.
+
+If job not found:
+
+return 404.
+
+---
+
+3️⃣ POST /internal/job-update
+
+This endpoint is used by the worker.
+
+Body:
+
+{
+jobId: string,
+status: "processing" | "completed" | "failed",
+processedImageKey?: string
+}
+
+Responsibilities:
+
+update job status
+store processedImageKey if provided
+update timestamps
+
+---
+
+JOB SERVICE
+
+Extend job.service.ts.
+
+Add functions:
+
+getJob(jobId)
+
+updateJobStatus(jobId, status)
+
+setProcessedImage(jobId, imageKey)
+
+---
+
+CONTROLLERS
+
+Update status.controller.ts.
+
+Add handlers for:
+
+getStatus
+getResult
+updateJob
+
+Controllers must remain thin and call services.
+
+---
+
+ROUTES
+
+Update routes/status.routes.ts.
+
+Add:
+
+GET /status/:jobId
+GET /result/:jobId
+POST /internal/job-update
+
+---
+
+PROCESSED IMAGE URL
+
+Generate the public URL using:
+
+https://{bucket}.s3.{region}.amazonaws.com/{processedKey}
+
+Use:
+
+S3_BUCKET_NAME
+AWS_REGION
+S3_PROCESSED_PREFIX
+
+---
+
+ERROR HANDLING
+
+Return structured JSON errors.
+
+Examples:
+
+job not found
+job not completed
+invalid status update
+
+---
+
+LOGGING
+
+Log:
+
+status requests
+result requests
+job status updates
+
+---
+
+CODE QUALITY
+
+Ensure:
+
+clean TypeScript types
+services contain business logic
+controllers remain thin
+consistent error responses
+
+Do not modify the upload endpoint.
+
+Only implement the job lifecycle endpoints.
+
+
+
+------------------------------------------------------
