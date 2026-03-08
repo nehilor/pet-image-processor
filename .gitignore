@@ -34,6 +34,8 @@ coverage/
 *.tfstate
 *.tfstate.*
 .terraform.lock.hcl
+terraform.tfvars
+infra/worker.zip
 
 # Optional: descomenta si no quieres versionar docs o prompts
 # docs/

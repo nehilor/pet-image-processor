@@ -1,0 +1,17 @@
+#-------------------------------------------------------------------------------
+# Example Terraform Variables
+#-------------------------------------------------------------------------------
+# Copy this file to terraform.tfvars and adjust for your environment.
+# Do not commit terraform.tfvars if it contains sensitive or environment-specific values.
+#
+# Usage:
+#   cp terraform.tfvars.example terraform.tfvars
+#   terraform plan
+#   terraform apply
+
+aws_region          = "us-east-1"
+s3_bucket_name      = "pet-image-processor"
+queue_name          = "image-processing-queue"
+lambda_function_name = "pet-image-processor-worker"
+s3_original_prefix  = "original-images"
+s3_processed_prefix  = "processed-images"
