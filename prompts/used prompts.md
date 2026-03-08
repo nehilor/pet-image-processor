@@ -2092,3 +2092,273 @@ The backend must:
 
 
 ------------------------------------------------------
+
+You are a senior Node.js backend engineer.
+
+You are implementing the backend foundation for the system described in the specification documents.
+
+Follow the architecture described in:
+
+docs/system_architecture.spec.md
+docs/backend_processing_pipeline.spec.md
+docs/implementation_plan.md
+
+Specifically implement **Phase 2 – Backend Core Architecture**.
+
+IMPORTANT:
+Do NOT implement the upload endpoint yet.
+Do NOT implement queue publishing yet.
+Do NOT implement worker logic yet.
+
+Your goal is to create the **backend project foundation and architecture** only.
+
+---
+
+PROJECT STRUCTURE
+
+The backend lives in:
+
+backend/
+
+Create the following structure:
+
+backend/
+src/
+server.ts
+
+routes/
+controllers/
+services/
+queue/
+storage/
+jobs/
+utils/
+
+config/
+
+tests/
+
+---
+
+TECH STACK
+
+Node.js
+Express
+TypeScript
+
+Dependencies to install:
+
+express
+cors
+dotenv
+uuid
+
+Dev dependencies:
+
+typescript
+ts-node
+nodemon
+jest
+supertest
+@types/jest
+@types/express
+@types/node
+
+---
+
+SERVER SETUP
+
+Implement a clean Express server setup in:
+
+src/server.ts
+
+Requirements:
+
+• load environment variables
+• configure JSON middleware
+• configure CORS
+• register routes
+• start server on PORT
+
+Use a clean modular structure.
+
+---
+
+ROUTES LAYER
+
+Create route modules.
+
+For now create:
+
+routes/upload.routes.ts
+routes/status.routes.ts
+
+Even if endpoints are not implemented yet, define the route structure.
+
+Example:
+
+POST /upload
+GET /status/:jobId
+GET /result/:jobId
+
+Routes should delegate to controllers.
+
+---
+
+CONTROLLERS LAYER
+
+Create controllers but leave business logic minimal.
+
+controllers/upload.controller.ts
+controllers/status.controller.ts
+
+Controllers should:
+
+• receive request
+• call service layer
+• return response
+• handle errors
+
+Do NOT implement full logic yet.
+
+---
+
+SERVICES LAYER
+
+Create empty service scaffolding.
+
+services/job.service.ts
+services/storage.service.ts
+services/queue.service.ts
+
+These services will later handle:
+
+job lifecycle
+S3 interaction
+SQS interaction
+
+For now define method signatures only.
+
+---
+
+JOB MODEL
+
+Create a job abstraction:
+
+jobs/job.types.ts
+
+Define:
+
+JobStatus
+
+queued
+processing
+completed
+failed
+
+Define Job interface.
+
+---
+
+CONFIGURATION
+
+Create a configuration loader:
+
+config/env.ts
+
+This module should:
+
+• read environment variables
+• validate required variables
+• export typed configuration
+
+---
+
+UTILITIES
+
+Create utility modules.
+
+utils/logger.ts
+
+Provide a simple structured logger wrapper.
+
+---
+
+ENVIRONMENT FILES
+
+Generate:
+
+.env.example
+
+Include the following variables:
+
+PORT
+NODE_ENV
+
+AWS_REGION
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+S3_BUCKET_NAME
+S3_ORIGINAL_PREFIX
+S3_PROCESSED_PREFIX
+
+SQS_QUEUE_URL
+
+MAX_FILE_SIZE_MB
+WORKER_POLL_INTERVAL_MS
+JOB_STATUS_TTL_MINUTES
+
+Also add `.env` to `.gitignore`.
+
+---
+
+PACKAGE.JSON SCRIPTS
+
+Add scripts:
+
+dev
+build
+start
+test
+
+Example intention:
+
+dev → run with nodemon
+build → compile TypeScript
+start → run compiled code
+test → run jest
+
+---
+
+TESTING SETUP
+
+Configure Jest but do NOT write tests yet.
+
+Create:
+
+tests/setup.ts
+
+Ensure Supertest can be used later.
+
+---
+
+OUTPUT REQUIREMENTS
+
+Generate all files necessary for this foundation.
+
+Focus on:
+
+• clean architecture
+• good TypeScript types
+• separation of concerns
+• readable folder structure
+• maintainable code
+
+Do NOT implement business logic yet.
+This step is only the backend skeleton.
+
+Make sure the server can start successfully.
+
+
+------------------------------------------------------
