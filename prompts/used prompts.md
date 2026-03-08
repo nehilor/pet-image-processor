@@ -115,7 +115,7 @@ Terraform infrastructure
 Explain step-by-step h
 
 
-------------------------------------------------------
+---
 
 You are a senior backend engineer designing the processing pipeline for a take-home engineering assignment.
 
@@ -384,7 +384,7 @@ upload endpoint end-to-end simulation
 • Assume this system will be reviewed by senior engineers
 
 
-------------------------------------------------------
+---
 
 You are a senior frontend engineer designing the frontend experience for a take-home engineering assignment.
 
@@ -696,7 +696,7 @@ IMPORTANT RULES
 • Assume the audience is a senior engineering reviewer
 
 
-------------------------------------------------------
+---
 
 You are a senior DevOps engineer designing the infrastructure for a take-home engineering assignment.
 
@@ -1000,7 +1000,7 @@ Examples:
 • Assume this document will be reviewed by experienced engineers
 
 
-------------------------------------------------------
+---
 
 You are a senior software engineer and test architect designing the testing strategy for a take-home engineering assignment.
 
@@ -1397,7 +1397,7 @@ IMPORTANT RULES
 • Focus on confidence in the system’s critical behavior
 • Assume the audience is a senior engineering reviewer
 
-------------------------------------------------------
+---
 
 You are a senior software engineer planning the implementation of a take-home engineering assignment.
 
@@ -1754,7 +1754,7 @@ Examples:
 • Be structured and precise
 • Focus on implementation order and discipline
 • Assume the audience is a senior engineering reviewer
-------------------------------------------------------
+---
 
 You are implementing the backend foundation for the project described in the specification documents.
 
@@ -2091,7 +2091,7 @@ The backend must:
 • Prefer small files with clear responsibilities
 
 
-------------------------------------------------------
+---
 
 You are a senior Node.js backend engineer.
 
@@ -2361,7 +2361,7 @@ This step is only the backend skeleton.
 Make sure the server can start successfully.
 
 
-------------------------------------------------------
+---
 
 You are a senior Node.js backend engineer implementing the upload pipeline for an asynchronous image processing system.
 
@@ -2599,7 +2599,7 @@ upload route
 
 Ensure the server still starts successfully after this implementation.
 
-------------------------------------------------------
+---
 
 You are a senior backend engineer implementing the asynchronous worker for the image processing system.
 
@@ -2821,7 +2821,7 @@ Do not implement frontend yet.
 Focus only on the worker processing pipeline.
 
 
-------------------------------------------------------
+---
 
 You are a senior Node.js backend engineer continuing the implementation of the asynchronous image processing system.
 
@@ -2988,7 +2988,7 @@ Do not modify the upload endpoint.
 
 Only implement the job lifecycle endpoints.
 
-------------------------------------------------------
+---
 
 You are a senior backend engineer adding tests to the Node.js backend of the pet-image-processor project.
 
@@ -3140,7 +3140,7 @@ be deterministic
 avoid real AWS calls
 
 
-------------------------------------------------------
+---
 
 You are a senior DevOps engineer implementing infrastructure for the pet-image-processor project.
 
@@ -3319,7 +3319,7 @@ commented
 Add comments explaining infrastructure decisions.
 
 
-------------------------------------------------------
+---
 
 
 You are a senior software engineer writing documentation for the pet-image-processor project.
@@ -3464,7 +3464,7 @@ Authentication
 Rate limiting
 
 
-------------------------------------------------------
+---
 
 
 You are documenting how AI tools were used during the development of the pet-image-processor project.
@@ -3558,4 +3558,4 @@ Summarize that AI served as an assistant to accelerate development, but the fina
 
 The document should be concise, transparent, and professional.
 
-------------------------------------------------------
+---
